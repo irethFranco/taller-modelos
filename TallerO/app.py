@@ -235,15 +235,36 @@ st.markdown('<div class="label-seccion">3) Predicción manual (jugar con valores
 st.markdown('<div class="bloque">', unsafe_allow_html=True)
 col_a, col_b, col_c = st.columns(3)
 with col_a:
-    frecuencia_cardiaca = st.number_input("frecuencia_cardiaca", min_value=40.0, max_value=220.0, value=140.0, step=1.0)
-    potencia = st.number_input("potencia", min_value=0.0, max_value=2000.0, value=250.0, step=5.0)
-    cadencia = st.number_input("cadencia", min_value=0.0, max_value=220.0, value=85.0, step=1.0)
+    st.markdown("**Frecuencia cardiaca**")
+    frecuencia_cardiaca = st.number_input(
+        "frecuencia_cardiaca", min_value=40.0, max_value=220.0, value=140.0, step=1.0
+    )
+    st.markdown("**Potencia**")
+    potencia = st.number_input(
+        "potencia", min_value=0.0, max_value=2000.0, value=250.0, step=5.0
+    )
+    st.markdown("**Cadencia**")
+    cadencia = st.number_input(
+        "cadencia", min_value=0.0, max_value=220.0, value=85.0, step=1.0
+    )
 with col_b:
-    tiempo = st.number_input("tiempo", min_value=0.0, max_value=400.0, value=60.0, step=1.0)
-    temperatura = st.number_input("temperatura", min_value=-10.0, max_value=60.0, value=24.0, step=0.5)
+    st.markdown("**Tiempo**")
+    tiempo = st.number_input(
+        "tiempo", min_value=0.0, max_value=400.0, value=60.0, step=1.0
+    )
+    st.markdown("**Temperatura**")
+    temperatura = st.number_input(
+        "temperatura", min_value=-10.0, max_value=60.0, value=24.0, step=0.5
+    )
 with col_c:
-    pendiente = st.number_input("pendiente", min_value=-25.0, max_value=25.0, value=2.0, step=0.5)
-    velocidad = st.number_input("velocidad", min_value=0.0, max_value=120.0, value=30.0, step=0.5)
+    st.markdown("**Pendiente**")
+    pendiente = st.number_input(
+        "pendiente", min_value=-25.0, max_value=25.0, value=2.0, step=0.5
+    )
+    st.markdown("**Velocidad**")
+    velocidad = st.number_input(
+        "velocidad", min_value=0.0, max_value=120.0, value=30.0, step=0.5
+    )
 
 if st.button("Predecir con valores manuales"):
     if "modelos" not in st.session_state:

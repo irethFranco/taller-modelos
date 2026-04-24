@@ -56,20 +56,20 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color: #f5f7fb;
+        background-color: #f8fafc;
         color: #1f2937;
     }
     .block-container {
-        padding-top: 1.2rem;
-        padding-bottom: 1.4rem;
+        padding-top: 1rem;
+        padding-bottom: 1.2rem;
     }
     .tarjeta {
         background: #ffffff;
-        border: 1px solid #d6deea;
+        border: 1px solid #dbe4f0;
         border-radius: 14px;
-        padding: 1rem 1rem;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-        margin-bottom: 0.8rem;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05);
+        margin-bottom: 0.9rem;
     }
     .tarjeta h2, .tarjeta h3 {
         color: #0f172a;
@@ -83,29 +83,41 @@ st.markdown(
         color: #166534;
         font-weight: 600;
     }
+    .bloque-botones {
+        background: #ffffff;
+        border: 1px solid #dbe4f0;
+        border-radius: 14px;
+        padding: 0.9rem;
+        margin-bottom: 0.9rem;
+    }
     .stButton > button {
         width: 100%;
-        border: 1px solid #1d4ed8;
+        border: 1px solid #0f766e;
         border-radius: 10px;
         font-weight: 600;
         color: #ffffff;
-        background: #1d4ed8;
+        background: #0f766e;
         padding: 0.55rem 0.8rem;
         transition: background-color 0.12s ease;
     }
     .stButton > button:hover {
-        background: #1e40af;
+        background: #115e59;
     }
-    div[data-testid="stDataFrame"] {
-        border: 1px solid #d6deea;
+    div[data-testid="stTable"] table {
+        background: #ffffff;
+        color: #111827;
+        border: 1px solid #dbe4f0;
         border-radius: 10px;
-        overflow: hidden;
     }
     .label-seccion {
         font-size: 1.02rem;
         font-weight: 700;
         color: #0f172a;
         margin-bottom: 0.5rem;
+    }
+    .nota {
+        color: #475569;
+        font-size: 0.92rem;
     }
     </style>
     """,
@@ -131,39 +143,46 @@ with col_izq:
     else:
         st.error("No se encuentra el dataset base.")
 
-    if st.button("Generar train.csv y test.csv"):
-        try:
-            train_df, test_df = generar_archivos_entrenamiento_prueba(
-                ruta_dataset=str(DATASET_PATH),
-                ruta_train=str(TRAIN_PATH),
-                ruta_test=str(TEST_PATH),
-            )
-            st.success(f"Archivos creados. Train: {len(train_df)} | Test: {len(test_df)}")
-        except Exception as exc:
-            st.error(f"No se pudo separar el dataset: {exc}")
-
-    if st.button("Entrenar modelos (solo una vez)"):
-        if not TRAIN_PATH.exists():
-            st.warning("Primero genera train.csv y test.csv.")
-        else:
+    st.markdown('<div class="bloque-botones">', unsafe_allow_html=True)
+    col_btn1, col_btn2 = st.columns(2)
+    with col_btn1:
+        if st.button("Generar train/test"):
             try:
-                st.session_state["modelos"] = entrenar_y_guardar_modelos()
-                limpiar_resultados_test()
-                st.success("Modelos entrenados y guardados.")
+                train_df, test_df = generar_archivos_entrenamiento_prueba(
+                    ruta_dataset=str(DATASET_PATH),
+                    ruta_train=str(TRAIN_PATH),
+                    ruta_test=str(TEST_PATH),
+                )
+                st.success(f"Archivos creados. Train: {len(train_df)} | Test: {len(test_df)}")
             except Exception as exc:
-                st.error(f"No se pudieron entrenar los modelos: {exc}")
+                st.error(f"No se pudo separar el dataset: {exc}")
+    with col_btn2:
+        if st.button("Entrenar modelos"):
+            if not TRAIN_PATH.exists():
+                st.warning("Primero genera train.csv y test.csv.")
+            else:
+                try:
+                    st.session_state["modelos"] = entrenar_y_guardar_modelos()
+                    limpiar_resultados_test()
+                    st.success("Modelos entrenados y guardados.")
+                except Exception as exc:
+                    st.error(f"No se pudieron entrenar los modelos: {exc}")
 
-    if st.button("Cargar modelos ya entrenados"):
-        if modelos_guardados_disponibles():
-            st.session_state["modelos"] = cargar_modelos_guardados()
-            st.success("Modelos cargados desde disco.")
-        else:
-            st.warning("No hay modelos guardados. Entrena primero.")
-
-    if st.button("Hacer nuevo test"):
-        limpiar_resultados_test()
-        st.session_state["manual_values"] = {}
-        st.success("Formulario y resultados reiniciados.")
+    col_btn3, col_btn4 = st.columns(2)
+    with col_btn3:
+        if st.button("Cargar modelos"):
+            if modelos_guardados_disponibles():
+                st.session_state["modelos"] = cargar_modelos_guardados()
+                st.success("Modelos cargados desde disco.")
+            else:
+                st.warning("No hay modelos guardados. Entrena primero.")
+    with col_btn4:
+        if st.button("Nuevo test"):
+            limpiar_resultados_test()
+            st.session_state["manual_values"] = {}
+            st.success("Formulario y resultados reiniciados.")
+    st.markdown('<div class="nota">Usa "Cargar modelos" para evitar reentrenar.</div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with col_der:
     st.markdown('<div class="label-seccion">2) Test de métricas sobre test.csv</div>', unsafe_allow_html=True)
@@ -202,7 +221,7 @@ with col_der:
             )
 
     if "tabla_metricas" in st.session_state:
-        st.dataframe(st.session_state["tabla_metricas"], use_container_width=True)
+        st.table(st.session_state["tabla_metricas"])
 
 st.markdown('<div class="label-seccion">3) Predicción manual (jugar con valores)</div>', unsafe_allow_html=True)
 col_a, col_b, col_c = st.columns(3)
@@ -252,4 +271,4 @@ if st.button("Predecir con valores manuales"):
         )
 
 if "tabla_manual" in st.session_state:
-    st.dataframe(st.session_state["tabla_manual"], use_container_width=True)
+    st.table(st.session_state["tabla_manual"])

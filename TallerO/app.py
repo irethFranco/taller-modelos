@@ -228,24 +228,37 @@ with col_der:
             pred_knn = st.session_state["modelos"]["knn"].predict(X_test)
             pred_rf = st.session_state["modelos"]["rf"].predict(X_test)
 
-            st.session_state["tabla_metricas"] = pd.DataFrame(
+            tabla_metricas = pd.DataFrame(
                 {
                     "Modelo": ["Regresión Lineal", "KNN", "Random Forest"],
                     "MSE": [
-                        f"{mean_squared_error(y_test, pred_lr):.4f}",
-                        f"{mean_squared_error(y_test, pred_knn):.4f}",
-                        f"{mean_squared_error(y_test, pred_rf):.4f}",
+                        mean_squared_error(y_test, pred_lr),
+                        mean_squared_error(y_test, pred_knn),
+                        mean_squared_error(y_test, pred_rf),
                     ],
                     "R2": [
-                        f"{r2_score(y_test, pred_lr):.4f}",
-                        f"{r2_score(y_test, pred_knn):.4f}",
-                        f"{r2_score(y_test, pred_rf):.4f}",
+                        r2_score(y_test, pred_lr),
+                        r2_score(y_test, pred_knn),
+                        r2_score(y_test, pred_rf),
                     ],
                 }
             )
+            tabla_metricas["RMSE"] = tabla_metricas["MSE"] ** 0.5
+            st.session_state["tabla_metricas"] = tabla_metricas
+            st.session_state["mejor_r2"] = tabla_metricas.loc[tabla_metricas["R2"].idxmax()]
+            st.session_state["mejor_rmse"] = tabla_metricas.loc[tabla_metricas["RMSE"].idxmin()]
 
     if "tabla_metricas" in st.session_state:
-        st.table(st.session_state["tabla_metricas"])
+        tabla_mostrar = st.session_state["tabla_metricas"].copy()
+        tabla_mostrar["MSE"] = tabla_mostrar["MSE"].map(lambda x: f"{x:.4f}")
+        tabla_mostrar["RMSE"] = tabla_mostrar["RMSE"].map(lambda x: f"{x:.4f}")
+        tabla_mostrar["R2"] = tabla_mostrar["R2"].map(lambda x: f"{x:.4f}")
+        st.table(tabla_mostrar)
+        if "mejor_r2" in st.session_state and "mejor_rmse" in st.session_state:
+            st.success(
+                f"Mejor por R2: {st.session_state['mejor_r2']['Modelo']} ({st.session_state['mejor_r2']['R2']:.4f}) | "
+                f"Mejor por menor RMSE: {st.session_state['mejor_rmse']['Modelo']} ({st.session_state['mejor_rmse']['RMSE']:.4f})"
+            )
     st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown('<div class="label-seccion">3) Predicción manual (jugar con valores)</div>', unsafe_allow_html=True)

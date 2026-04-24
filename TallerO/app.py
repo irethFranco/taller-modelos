@@ -123,6 +123,15 @@ st.markdown(
         color: #475569;
         font-size: 0.92rem;
     }
+    .resumen-modelo {
+        background: #f8f4ec;
+        border: 1px solid #e7dcc9;
+        border-radius: 10px;
+        color: #3f3a31;
+        padding: 0.7rem 0.9rem;
+        margin-top: 0.35rem;
+        font-weight: 600;
+    }
     .divider {
         margin: 0.5rem 0 0.3rem 0;
         border-top: 1px solid #e2e8f0;
@@ -255,9 +264,14 @@ with col_der:
         tabla_mostrar["R2"] = tabla_mostrar["R2"].map(lambda x: f"{x:.4f}")
         st.table(tabla_mostrar)
         if "mejor_r2" in st.session_state and "mejor_rmse" in st.session_state:
-            st.success(
-                f"Mejor por R2: {st.session_state['mejor_r2']['Modelo']} ({st.session_state['mejor_r2']['R2']:.4f}) | "
-                f"Mejor por menor RMSE: {st.session_state['mejor_rmse']['Modelo']} ({st.session_state['mejor_rmse']['RMSE']:.4f})"
+            st.markdown(
+                f"<div class='resumen-modelo'>"
+                f"Mejor por R2: {st.session_state['mejor_r2']['Modelo']} "
+                f"({st.session_state['mejor_r2']['R2']:.4f}) | "
+                f"Mejor por menor RMSE: {st.session_state['mejor_rmse']['Modelo']} "
+                f"({st.session_state['mejor_rmse']['RMSE']:.4f})"
+                f"</div>",
+                unsafe_allow_html=True,
             )
     st.markdown("</div>", unsafe_allow_html=True)
 

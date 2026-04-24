@@ -141,6 +141,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+if "modelos" not in st.session_state and modelos_guardados_disponibles():
+    st.session_state["modelos"] = cargar_modelos_guardados()
+
 col_izq, col_der = st.columns([1, 1.25], gap="large")
 
 with col_izq:
@@ -151,6 +154,7 @@ with col_izq:
     else:
         st.error("No se encuentra el dataset base.")
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+    modelos_ya_listos = modelos_guardados_disponibles()
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         if st.button("Generar train/test"):
@@ -164,7 +168,7 @@ with col_izq:
             except Exception as exc:
                 st.error(f"No se pudo separar el dataset: {exc}")
     with col_btn2:
-        if st.button("Entrenar modelos"):
+        if st.button("Entrenar modelos", disabled=modelos_ya_listos):
             if not TRAIN_PATH.exists():
                 st.warning("Primero genera train.csv y test.csv.")
             else:
@@ -188,7 +192,13 @@ with col_izq:
             limpiar_resultados_test()
             st.session_state["manual_values"] = {}
             st.success("Formulario y resultados reiniciados.")
-    st.markdown('<div class="nota">Usa "Cargar modelos" para evitar reentrenar.</div>', unsafe_allow_html=True)
+    if modelos_ya_listos:
+        st.markdown(
+            '<div class="nota">Modelos ya entrenados: puedes hacer nuevos test sin reentrenar.</div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown('<div class="nota">Entrena una vez y luego usa "Nuevo test" para seguir probando.</div>', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col_der:

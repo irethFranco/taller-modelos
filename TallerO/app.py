@@ -80,28 +80,30 @@ st.markdown(
         margin: 0.2rem 0;
     }
     .estado-ok {
-        color: #166534;
+        color: #0f5132;
         font-weight: 600;
     }
-    .bloque-botones {
+    .bloque {
         background: #ffffff;
         border: 1px solid #dbe4f0;
         border-radius: 14px;
-        padding: 0.9rem;
+        padding: 1rem;
         margin-bottom: 0.9rem;
     }
     .stButton > button {
         width: 100%;
-        border: 1px solid #0f766e;
+        border: 1px solid #cbd5e1;
         border-radius: 10px;
-        font-weight: 600;
-        color: #ffffff;
-        background: #0f766e;
-        padding: 0.55rem 0.8rem;
-        transition: background-color 0.12s ease;
+        font-weight: 500;
+        color: #1f2937;
+        background: #ffffff;
+        padding: 0.6rem 0.8rem;
+        transition: all 0.12s ease;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     }
     .stButton > button:hover {
-        background: #115e59;
+        border-color: #94a3b8;
+        background: #f8fafc;
     }
     div[data-testid="stTable"] table {
         background: #ffffff;
@@ -118,6 +120,10 @@ st.markdown(
     .nota {
         color: #475569;
         font-size: 0.92rem;
+    }
+    .divider {
+        margin: 0.5rem 0 0.3rem 0;
+        border-top: 1px solid #e2e8f0;
     }
     </style>
     """,
@@ -138,12 +144,12 @@ col_izq, col_der = st.columns([1, 1.25], gap="large")
 
 with col_izq:
     st.markdown('<div class="label-seccion">1) Preparación y entrenamiento</div>', unsafe_allow_html=True)
+    st.markdown('<div class="bloque">', unsafe_allow_html=True)
     if DATASET_PATH.exists():
         st.markdown('<div class="estado-ok">Dataset cargado correctamente.</div>', unsafe_allow_html=True)
     else:
         st.error("No se encuentra el dataset base.")
-
-    st.markdown('<div class="bloque-botones">', unsafe_allow_html=True)
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         if st.button("Generar train/test"):
@@ -186,6 +192,7 @@ with col_izq:
 
 with col_der:
     st.markdown('<div class="label-seccion">2) Test de métricas sobre test.csv</div>', unsafe_allow_html=True)
+    st.markdown('<div class="bloque">', unsafe_allow_html=True)
     if st.button("Evaluar métricas comparativas"):
         if "modelos" not in st.session_state:
             if modelos_guardados_disponibles():
@@ -222,8 +229,10 @@ with col_der:
 
     if "tabla_metricas" in st.session_state:
         st.table(st.session_state["tabla_metricas"])
+    st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown('<div class="label-seccion">3) Predicción manual (jugar con valores)</div>', unsafe_allow_html=True)
+st.markdown('<div class="bloque">', unsafe_allow_html=True)
 col_a, col_b, col_c = st.columns(3)
 with col_a:
     frecuencia_cardiaca = st.number_input("frecuencia_cardiaca", min_value=40.0, max_value=220.0, value=140.0, step=1.0)
@@ -272,3 +281,4 @@ if st.button("Predecir con valores manuales"):
 
 if "tabla_manual" in st.session_state:
     st.table(st.session_state["tabla_manual"])
+st.markdown("</div>", unsafe_allow_html=True)

@@ -73,7 +73,9 @@ st.markdown(
     }
     .tarjeta h2, .tarjeta h3 {
         color: #0f172a;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0;
+        font-size: 2rem;
+        letter-spacing: 0.2px;
     }
     .tarjeta p {
         color: #334155;
@@ -134,7 +136,6 @@ st.markdown(
     """
     <div class="tarjeta">
         <h2>Taller de ML - Fatiga en Ciclismo</h2>
-        <p>Flujo: separar dataset en train/test, entrenar una vez con pipeline, evaluar métricas y probar valores manuales.</p>
     </div>
     """,
     unsafe_allow_html=True,

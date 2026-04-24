@@ -143,6 +143,8 @@ st.markdown(
 
 if "modelos" not in st.session_state and modelos_guardados_disponibles():
     st.session_state["modelos"] = cargar_modelos_guardados()
+if "entrenado_en_sesion" not in st.session_state:
+    st.session_state["entrenado_en_sesion"] = False
 
 col_izq, col_der = st.columns([1, 1.25], gap="large")
 
@@ -154,7 +156,7 @@ with col_izq:
     else:
         st.error("No se encuentra el dataset base.")
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-    modelos_ya_listos = modelos_guardados_disponibles()
+    modelos_ya_listos = st.session_state.get("entrenado_en_sesion", False)
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         if st.button("Generar train/test"):
@@ -175,6 +177,7 @@ with col_izq:
                 else:
                     try:
                         st.session_state["modelos"] = entrenar_y_guardar_modelos()
+                        st.session_state["entrenado_en_sesion"] = True
                         limpiar_resultados_test()
                         st.success("Modelos entrenados y guardados.")
                     except Exception as exc:

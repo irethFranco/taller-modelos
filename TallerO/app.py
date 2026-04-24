@@ -332,15 +332,12 @@ if st.button("Predecir con valores manuales"):
             ]
         )
 
-        pred_lr = float(st.session_state["modelos"]["lr"].predict(fila_manual)[0])
-        pred_knn = float(st.session_state["modelos"]["knn"].predict(fila_manual)[0])
         pred_rf = float(st.session_state["modelos"]["rf"].predict(fila_manual)[0])
-        promedio = (pred_lr + pred_knn + pred_rf) / 3
 
         st.session_state["tabla_manual"] = pd.DataFrame(
             {
-                "Modelo": ["Regresión Lineal", "KNN", "Random Forest", "Promedio"],
-                "Fatiga predicha": [f"{pred_lr:.4f}", f"{pred_knn:.4f}", f"{pred_rf:.4f}", f"{promedio:.4f}"],
+                "Modelo": ["Random Forest (sin normalizar)"],
+                "Fatiga predicha": [f"{pred_rf:.4f}"],
             }
         )
 

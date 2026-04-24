@@ -343,4 +343,8 @@ if st.button("Predecir con valores manuales"):
 
 if "tabla_manual" in st.session_state:
     st.table(st.session_state["tabla_manual"])
+    st.caption(
+        "Este valor manual corresponde a la fatiga estimada por Random Forest con datos sin normalizar. "
+        "Un valor mayor indica mayor fatiga esperada. Para comparar modelos, revisa las métricas en test.csv."
+    )
 st.markdown("</div>", unsafe_allow_html=True)

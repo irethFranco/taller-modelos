@@ -12,10 +12,11 @@ from modelos_estandar import (
     generar_archivos_entrenamiento_prueba,
 )
 
-DATASET_PATH = Path("dataset_ciclismo_fatiga.csv")
-TRAIN_PATH = Path("train.csv")
-TEST_PATH = Path("test.csv")
-MODELOS_DIR = Path("modelos_guardados")
+BASE_DIR = Path(__file__).resolve().parent
+DATASET_PATH = BASE_DIR / "dataset_ciclismo_fatiga.csv"
+TRAIN_PATH = BASE_DIR / "train.csv"
+TEST_PATH = BASE_DIR / "test.csv"
+MODELOS_DIR = BASE_DIR / "modelos_guardados"
 
 st.set_page_config(page_title="Taller Fatiga Ciclismo", page_icon="🚴", layout="centered")
 st.markdown(

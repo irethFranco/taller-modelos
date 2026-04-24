@@ -168,16 +168,19 @@ with col_izq:
             except Exception as exc:
                 st.error(f"No se pudo separar el dataset: {exc}")
     with col_btn2:
-        if st.button("Entrenar modelos", disabled=modelos_ya_listos):
-            if not TRAIN_PATH.exists():
-                st.warning("Primero genera train.csv y test.csv.")
-            else:
-                try:
-                    st.session_state["modelos"] = entrenar_y_guardar_modelos()
-                    limpiar_resultados_test()
-                    st.success("Modelos entrenados y guardados.")
-                except Exception as exc:
-                    st.error(f"No se pudieron entrenar los modelos: {exc}")
+        if not modelos_ya_listos:
+            if st.button("Entrenar modelos"):
+                if not TRAIN_PATH.exists():
+                    st.warning("Primero genera train.csv y test.csv.")
+                else:
+                    try:
+                        st.session_state["modelos"] = entrenar_y_guardar_modelos()
+                        limpiar_resultados_test()
+                        st.success("Modelos entrenados y guardados.")
+                    except Exception as exc:
+                        st.error(f"No se pudieron entrenar los modelos: {exc}")
+        else:
+            st.info("Modelo ya entrenado")
 
     col_btn3, col_btn4 = st.columns(2)
     with col_btn3:
